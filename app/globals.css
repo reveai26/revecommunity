@@ -1,0 +1,109 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Pretendard Font */
+@font-face {
+  font-family: 'Pretendard Variable';
+  font-weight: 45 920;
+  font-style: normal;
+  font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/PretendardVariable.woff2') format('woff2-variations');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Medium.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-SemiBold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Bold.woff2') format('woff2');
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-text-primary;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Light mode overrides */
+  body.light {
+    --background: #FFFFFF;
+    --background-secondary: #F9FAFB;
+    --surface: #FFFFFF;
+    --surface-hover: #F3F4F6;
+    --border: #E5E7EB;
+    --text-primary: #111827;
+    --text-secondary: #6B7280;
+    --text-muted: #9CA3AF;
+  }
+}
+
+@layer components {
+  /* Button Styles */
+  .btn-primary {
+    @apply bg-primary text-white px-6 py-3 rounded-md font-medium;
+    @apply hover:bg-primary-hover transition-colors;
+    @apply active:bg-primary-active;
+  }
+
+  .btn-secondary {
+    @apply bg-transparent text-primary border border-primary px-6 py-3 rounded-md;
+    @apply hover:bg-primary-bg transition-colors;
+  }
+
+  .btn-ghost {
+    @apply bg-transparent text-text-secondary px-6 py-3 rounded-md;
+    @apply hover:bg-surface-hover transition-colors;
+  }
+
+  /* Card Styles */
+  .card {
+    @apply bg-surface border border-border rounded-lg p-4;
+    @apply hover:bg-surface-hover hover:border-border-light transition-colors;
+  }
+
+  /* Input Styles */
+  .input {
+    @apply bg-surface border border-border rounded-md px-4 py-3 text-text-primary;
+    @apply focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary-bg;
+    @apply transition-all;
+  }
+
+  .textarea {
+    @apply input resize-none;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
