@@ -3,6 +3,7 @@ import './globals.css'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Sidebar } from '@/components/sidebar'
 import { MobileNav } from '@/components/mobile-nav'
+import { VersionBadge } from '@/components/version-badge'
 
 export const metadata: Metadata = {
   title: '레브 커뮤니티',
@@ -29,6 +30,9 @@ export default function RootLayout({
 
             {/* Mobile Bottom Navigation */}
             <MobileNav />
+
+            {/* Version Badge */}
+            <VersionBadge />
           </div>
         </ThemeProvider>
       </body>
