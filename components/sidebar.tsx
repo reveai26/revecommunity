@@ -1,8 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { useState } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
 import { ThemeToggle } from './theme-toggle'
 import { cn } from '@/lib/utils'
 
@@ -36,9 +36,46 @@ const menuItems = [
   },
 ]
 
+interface UserProfile {
+  id: string
+  display_name: string
+  avatar_url: string | null
+  subscription_tier: string
+}
+
 export function Sidebar() {
   const pathname = usePathname()
+  const router = useRouter()
   const [isExpanded, setIsExpanded] = useState(false)
+  const [profile, setProfile] = useState<UserProfile | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchUser()
+  }, [])
+
+  const fetchUser = async () => {
+    try {
+      const res = await fetch('/api/auth/me')
+      const data = await res.json()
+      setProfile(data.profile)
+    } catch (error) {
+      console.error('Failed to fetch user:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' })
+      setProfile(null)
+      router.push('/')
+      router.refresh()
+    } catch (error) {
+      console.error('Logout failed:', error)
+    }
+  }
 
   return (
     <aside
@@ -95,15 +132,53 @@ export function Sidebar() {
         </div>
 
         {/* Profile / Login */}
-        <Link
-          href="/login"
-          className="flex items-center px-3 py-3 rounded-lg hover:bg-surface-hover transition-colors text-text-secondary"
-        >
-          <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-          </svg>
-          {isExpanded && <span className="ml-3 whitespace-nowrap">로그인</span>}
-        </Link>
+        {!loading && (
+          <>
+            {profile ? (
+              <div className="space-y-2">
+                <div className="flex items-center px-3 py-3 rounded-lg bg-surface-hover">
+                  {profile.avatar_url ? (
+                    <img
+                      src={profile.avatar_url}
+                      alt={profile.display_name}
+                      className="w-5 h-5 rounded-full flex-shrink-0"
+                    />
+                  ) : (
+                    <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center text-white text-xs flex-shrink-0">
+                      {profile.display_name?.charAt(0).toUpperCase() || 'U'}
+                    </div>
+                  )}
+                  {isExpanded && (
+                    <span className="ml-3 text-sm whitespace-nowrap truncate">
+                      {profile.display_name}
+                    </span>
+                  )}
+                </div>
+                {isExpanded && (
+                  <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center px-3 py-2 rounded-lg hover:bg-surface-hover transition-colors text-text-secondary text-sm"
+                  >
+                    <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    <span className="ml-3">로그아웃</span>
+                  </button>
+                )}
+              </div>
+            ) : (
+              <Link
+                href="/login"
+                className="flex items-center px-3 py-3 rounded-lg hover:bg-surface-hover transition-colors text-text-secondary"
+              >
+                <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                {isExpanded && <span className="ml-3 whitespace-nowrap">로그인</span>}
+              </Link>
+            )}
+          </>
+        )}
       </div>
     </aside>
   )
