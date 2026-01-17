@@ -6,6 +6,26 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/cjs/styles/prism'
 import { Comments } from '@/components/comments'
 
+interface Content {
+  id: string
+  slug: string
+  title: string
+  description: string | null
+  content_type: 'blog' | 'youtube'
+  body: string | null
+  youtube_url: string | null
+  youtube_id: string | null
+  thumbnail_url: string | null
+  access_tier: 'free' | 'basic' | 'pro' | 'max'
+  view_count: number
+  likes_count: number
+  comments_count: number
+  is_published: boolean
+  published_at: string | null
+  created_at: string
+  updated_at: string
+}
+
 export default async function ContentDetailPage({
   params,
 }: {
@@ -25,10 +45,12 @@ export default async function ContentDetailPage({
     notFound()
   }
 
+  const typedContent = content as Content
+
   // Check access permission
   const { data: { user } } = await supabase.auth.getUser()
 
-  if (content.access_tier !== 'free') {
+  if (typedContent.access_tier !== 'free') {
     if (!user) {
       redirect('/login?redirect=' + encodeURIComponent(`/it-ai/${params.slug}`))
     }
@@ -39,16 +61,16 @@ export default async function ContentDetailPage({
       .eq('user_id', user.id)
       .single()
 
-    if (!profile || !canAccessContent(profile.subscription_tier, content.access_tier)) {
-      return <AccessDenied tier={content.access_tier} />
+    if (!profile || !canAccessContent(profile.subscription_tier, typedContent.access_tier)) {
+      return <AccessDenied tier={typedContent.access_tier} />
     }
   }
 
   // Increment view count
   await supabase
     .from('contents')
-    .update({ view_count: content.view_count + 1 })
-    .eq('id', content.id)
+    .update({ view_count: typedContent.view_count + 1 })
+    .eq('id', typedContent.id)
 
   const tierLabels: Record<string, string> = {
     free: '무료',
@@ -64,7 +86,7 @@ export default async function ContentDetailPage({
     max: 'bg-warning/10 text-warning',
   }
 
-  if (content.content_type === 'youtube') {
+  if (typedContent.content_type === 'youtube') {
     return (
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         {/* YouTube Player */}
@@ -72,8 +94,8 @@ export default async function ContentDetailPage({
           <iframe
             width="100%"
             height="100%"
-            src={`https://www.youtube.com/embed/${content.youtube_id}`}
-            title={content.title}
+            src={`https://www.youtube.com/embed/${typedContent.youtube_id}`}
+            title={typedContent.title}
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
@@ -86,28 +108,28 @@ export default async function ContentDetailPage({
             <span className="text-xs px-2 py-1 rounded bg-error/10 text-error">
               영상
             </span>
-            <span className={`text-xs px-2 py-1 rounded ${tierColors[content.access_tier]}`}>
-              {tierLabels[content.access_tier]}
+            <span className={`text-xs px-2 py-1 rounded ${tierColors[typedContent.access_tier]}`}>
+              {tierLabels[typedContent.access_tier]}
             </span>
           </div>
 
-          <h1 className="text-3xl font-bold mb-4">{content.title}</h1>
+          <h1 className="text-3xl font-bold mb-4">{typedContent.title}</h1>
 
           <div className="flex items-center gap-3 text-sm text-text-muted">
             <span>REVE</span>
             <span>·</span>
-            <span>{new Date(content.published_at || '').toLocaleDateString('ko-KR')}</span>
+            <span>{new Date(typedContent.published_at || '').toLocaleDateString('ko-KR')}</span>
             <span>·</span>
-            <span>조회 {content.view_count.toLocaleString()}</span>
+            <span>조회 {typedContent.view_count.toLocaleString()}</span>
           </div>
 
-          {content.description && (
-            <p className="mt-6 text-text-secondary">{content.description}</p>
+          {typedContent.description && (
+            <p className="mt-6 text-text-secondary">{typedContent.description}</p>
           )}
         </div>
 
         {/* Comments */}
-        <Comments targetType="content" targetId={content.id} />
+        <Comments targetType="content" targetId={typedContent.id} />
       </div>
     )
   }
@@ -121,28 +143,28 @@ export default async function ContentDetailPage({
           <span className="text-xs px-2 py-1 rounded bg-info/10 text-info">
             블로그
           </span>
-          <span className={`text-xs px-2 py-1 rounded ${tierColors[content.access_tier]}`}>
-            {tierLabels[content.access_tier]}
+          <span className={`text-xs px-2 py-1 rounded ${tierColors[typedContent.access_tier]}`}>
+            {tierLabels[typedContent.access_tier]}
           </span>
         </div>
 
-        <h1 className="text-3xl font-bold mb-4">{content.title}</h1>
+        <h1 className="text-3xl font-bold mb-4">{typedContent.title}</h1>
 
         <div className="flex items-center gap-3 text-sm text-text-muted">
           <span>REVE</span>
           <span>·</span>
-          <span>{new Date(content.published_at || '').toLocaleDateString('ko-KR')}</span>
+          <span>{new Date(typedContent.published_at || '').toLocaleDateString('ko-KR')}</span>
           <span>·</span>
-          <span>조회 {content.view_count.toLocaleString()}</span>
+          <span>조회 {typedContent.view_count.toLocaleString()}</span>
         </div>
       </div>
 
       {/* Thumbnail */}
-      {content.thumbnail_url && (
+      {typedContent.thumbnail_url && (
         <div className="mb-8">
           <img
-            src={content.thumbnail_url}
-            alt={content.title}
+            src={typedContent.thumbnail_url}
+            alt={typedContent.title}
             className="w-full rounded-lg"
           />
         </div>
@@ -172,12 +194,12 @@ export default async function ContentDetailPage({
             },
           }}
         >
-          {content.body || ''}
+          {typedContent.body || ''}
         </ReactMarkdown>
       </article>
 
       {/* Comments */}
-      <Comments targetType="content" targetId={content.id} />
+      <Comments targetType="content" targetId={typedContent.id} />
     </div>
   )
 }
