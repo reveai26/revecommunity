@@ -2,13 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Pretendard Font */
+/* Pretendard Font - Official CDN */
 @font-face {
   font-family: 'Pretendard Variable';
   font-weight: 45 920;
   font-style: normal;
   font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/PretendardVariable.woff2') format('woff2-variations');
+  src: url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
+  src: url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/woff2/PretendardVariable.woff2') format('woff2');
 }
 
 @font-face {
@@ -16,7 +17,7 @@
   font-weight: 400;
   font-style: normal;
   font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.woff2') format('woff2');
+  src: url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/woff2/Pretendard-Regular.woff2') format('woff2');
 }
 
 @font-face {
@@ -24,7 +25,7 @@
   font-weight: 500;
   font-style: normal;
   font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Medium.woff2') format('woff2');
+  src: url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/woff2/Pretendard-Medium.woff2') format('woff2');
 }
 
 @font-face {
@@ -32,7 +33,7 @@
   font-weight: 600;
   font-style: normal;
   font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-SemiBold.woff2') format('woff2');
+  src: url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/woff2/Pretendard-SemiBold.woff2') format('woff2');
 }
 
 @font-face {
@@ -40,7 +41,7 @@
   font-weight: 700;
   font-style: normal;
   font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Bold.woff2') format('woff2');
+  src: url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/woff2/Pretendard-Bold.woff2') format('woff2');
 }
 
 @layer base {
