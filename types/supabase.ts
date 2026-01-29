@@ -194,6 +194,53 @@ export type Database = {
           created_at?: string
         }
       }
+      page_views: {
+        Row: {
+          id: string
+          path: string
+          page_title: string | null
+          referrer: string | null
+          user_agent: string | null
+          device_type: 'mobile' | 'desktop' | 'tablet' | null
+          country: string | null
+          session_id: string | null
+          visitor_id: string | null
+          user_id: string | null
+          is_new_visitor: boolean
+          duration: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          path: string
+          page_title?: string | null
+          referrer?: string | null
+          user_agent?: string | null
+          device_type?: 'mobile' | 'desktop' | 'tablet' | null
+          country?: string | null
+          session_id?: string | null
+          visitor_id?: string | null
+          user_id?: string | null
+          is_new_visitor?: boolean
+          duration?: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          path?: string
+          page_title?: string | null
+          referrer?: string | null
+          user_agent?: string | null
+          device_type?: 'mobile' | 'desktop' | 'tablet' | null
+          country?: string | null
+          session_id?: string | null
+          visitor_id?: string | null
+          user_id?: string | null
+          is_new_visitor?: boolean
+          duration?: number
+          created_at?: string
+        }
+      }
     }
   }
 }
